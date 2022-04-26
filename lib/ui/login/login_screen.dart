@@ -1,6 +1,9 @@
 import 'package:chat_c5/base.dart';
+import 'package:chat_c5/model/my_user.dart';
+import 'package:chat_c5/provider/user_provider.dart';
+import 'package:chat_c5/ui/home/home_screen.dart';
 import 'package:chat_c5/ui/login/login_viewmodel.dart';
-import 'package:chat_c5/ui/login/navigator.dart' as LoginNavigator;
+import 'package:chat_c5/ui/login/navigator.dart';
 import 'package:chat_c5/ui/register/register_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -13,7 +16,8 @@ class LoginScreen extends StatefulWidget {
   _LoginScreenState createState() => _LoginScreenState();
 }
 
-class _LoginScreenState extends BaseState<LoginScreen,LoginViewModel> {
+class _LoginScreenState extends BaseState<LoginScreen,LoginViewModel>
+    implements LoginNavigator{
   @override
   LoginViewModel initViewModel() => LoginViewModel();
   @override
@@ -114,5 +118,12 @@ class _LoginScreenState extends BaseState<LoginScreen,LoginViewModel> {
     if(formKey.currentState?.validate()==true){
       viewModel.login(email,password);
     }
+  }
+  @override
+  void gotoHome(MyUser user) {
+    var userProvider = Provider.of<UserProvider>(context,listen: false);
+    userProvider.user = user;
+
+    Navigator.of(context).pushReplacementNamed( HomeScreen.routeName);
   }
 }

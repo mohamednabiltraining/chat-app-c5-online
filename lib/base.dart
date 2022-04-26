@@ -6,7 +6,7 @@ class BaseViewModel<N extends BaseNavigator> extends ChangeNotifier {
 }
 
 abstract class BaseNavigator {
-  void showMessage(String message);
+  void showMessage(String message,{String? actionName , VoidCallback? action});
   void showLoading({String message,bool isDismissable});
   void hideDialog();
 }
@@ -42,10 +42,17 @@ abstract class BaseState<T extends StatefulWidget, VM extends BaseViewModel>
   }
 
   @override
-  void showMessage(String message) {
+  void showMessage(String message,{String? actionName , VoidCallback? action}) {
+    List<Widget>actions = [];
+    if(actionName!=null){
+      actions.add(
+        TextButton(onPressed: action, child: Text(actionName)));
+    }
+
     showDialog(
         context: context,
         builder: (_) => AlertDialog(
+          actions: actions,
           content: Row(
             children: [Expanded(child: Text(message))],
           ),

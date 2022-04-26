@@ -1,5 +1,9 @@
 import 'package:chat_c5/base.dart';
+import 'package:chat_c5/model/my_user.dart';
+import 'package:chat_c5/provider/user_provider.dart';
+import 'package:chat_c5/ui/home/home_screen.dart';
 import 'package:chat_c5/ui/login/login_screen.dart';
+import 'package:chat_c5/ui/register/navigator.dart';
 import 'package:chat_c5/ui/register/register_view_model.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -11,7 +15,8 @@ class RegisterScreen extends StatefulWidget {
   State<RegisterScreen> createState() => _RegisterScreenState();
 }
 
-class _RegisterScreenState extends BaseState<RegisterScreen,RegisterViewModel> {
+class _RegisterScreenState extends BaseState<RegisterScreen,RegisterViewModel>
+implements RegisterNavigator{
   GlobalKey<FormState> formKey = GlobalKey<FormState>();
 
 
@@ -161,12 +166,21 @@ class _RegisterScreenState extends BaseState<RegisterScreen,RegisterViewModel> {
   void validateForm() {
     if (formKey.currentState?.validate() == true) {
       // create Account
-      viewModel.register(email, password);
+      viewModel.register(email, password,firstName,lastName,userName);
     }
   }
 
   @override
   RegisterViewModel initViewModel() {
     return RegisterViewModel();
+  }
+
+  @override
+  void gotoHome(MyUser user) {
+    hideDialog();
+    var userProvider = Provider.of<UserProvider>(context,listen: false);
+    userProvider.user = user;
+    Navigator.of(context)
+        .pushReplacementNamed(HomeScreen.routeName);
   }
 }
